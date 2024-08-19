@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useState }from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { SafeAreaView, StyleSheet, Dimensions } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Direction } from "../types";
-import * as haptics from "expo-haptics";
+import * as Haptics from "expo-haptics";
 
 const { height } = Dimensions.get("window");
 import {
@@ -33,40 +33,41 @@ const Game = () => {
 
     const insets = useSafeAreaInsets();
     const ROWS = Math.floor(
-    (height - insets?.top - insets?.bottom - HEADER_HEIGHT) / PIXEL
-);
-const limits = {
-    minX: 0,
-    maxX: COLS - 1,
-    minY: 0,
-    maxY: ROWS - 1,
-};
+        (height - insets?.top - insets?.bottom - HEADER_HEIGHT) / PIXEL
+    );
+    const limits = {
+        minX: 0,
+        maxX: COLS - 1,
+        minY: 0,
+        maxY: ROWS - 1,
+    };
 
-function resetGame() {
-    setSnake(SNAKE_START);
-    setDirection(Direction.Right);
-}
 
-useEffect (() => {
-    if (!isGameOver) {
-        const speedInterval = setInterval(() => {
-            !isGamePaused && moveSnake();
-        }, SPEED);
-        return () => clearInterval(speedInterval);
-    } else {
-        resetGame();
+    function resetGame() {
+        setSnake(SNAKE_START);
+        setDirection(Direction.Right);
     }
-}, [snake, isGameOver, isGamePaused]);
 
-function handleGesture(event) {
-    const { translationX, translationY } = event.nativeEvent;
-
-    if (Math.abs(translationX) > Math.abs(translationY)) {
-        if (translationX > 0) {
-            setDirection(Direction.Right)
+    useEffect(() => {
+        if (!isGameOver) {
+            const speedInterval = setInterval(() => {
+                !isGamePaused && moveSnake();
+            }, SPEED);
+            return () => clearInterval(speedInterval);
         } else {
-            setDirection(Direction.Left)
-          }
+            resetGame();
+        }
+    }, [snake, isGameOver, isGamePaused]);
+
+    function handleGesture(event) {
+        const { translationX, translationY } = event.nativeEvent;
+
+        if (Math.abs(translationX) > Math.abs(translationY)) {
+            if (translationX > 0) {
+                setDirection(Direction.Right)
+            } else {
+                setDirection(Direction.Left)
+            }
         } else {
             if (translationY > 0) {
                 setDirection(Direction.Down)
@@ -90,8 +91,9 @@ function handleGesture(event) {
                 head.y += 1;
                 break;
             case Direction.Up:
+                head.y -= 1;
                 break;
-                default:
+            default:
                 break;
         }
         if (testGameOver(head)) {
@@ -100,7 +102,7 @@ function handleGesture(event) {
             return;
         }
         if (testEatsFood(head, food)) {
-            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Sucess);
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             setFood(newFoodPosition(limits));
             setSnake([head, ...snake]);
             setScore((prevScore) => prevScore + INCREMENT);
@@ -119,43 +121,44 @@ function handleGesture(event) {
     }
 
     function testEatsFood(snakeHead, foodLocation) {
-        return snake.Head.x == foodLocation.x && snakeHead.y == foodLocation.y;
+        return snakeHead.x == foodLocation.x && snakeHead.y == foodLocation.y;
     }
 
     function newFoodPosition() {
-        return{
+        return {
             x: Math.floor(Math.random() * limits.maxX),
             y: Math.floor(Math.random() * limits.maxY),
         }
     };
 
     const RandomFood = useMemo(() => {
-        return <Food coords={{ x: food.x, y: food.y }} top={insets.top}/>;
+        return <Food coords={{ x: food.x, y: food.y }} top={insets.top} />;
     }, [food]);
 
     return (
         <PanGestureHandler onGestureEvent={handleGesture}>
-            <SafeAreaView style={StyleSheet.container}>
+            <SafeAreaView style={styles.container}>
                 <Header
-                top={insets.top}
-                score={score}
-                pause={isGamePaused}
-                paused={() => setIsGamePaused((prev) => !prev)}
-                reload={() => setIsGameOver((prev) => !prev)}
+                    top={insets.top}
+                    score={score}
+                    paused={isGamePaused}
+                    pause={() => setIsGamePaused((prev) => !prev)}
+                    reload={() => setIsGameOver((prev) => !prev)}
                 />
-                <Board rows={ROWS} cols={COLS} top={insets.top}/>
-                <Snake snake={snake} top={insets.top}/>
+                <Board rows={ROWS} cols={COLS} top={insets.top} />
+                <Snake snake={snake} top={insets.top} />
+                { RandomFood }
             </SafeAreaView>
         </PanGestureHandler>
     )
 
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         backgroundColor: colors.p6,
         flex: 1,
     },
 
 })
- export default Game
+export default Game 

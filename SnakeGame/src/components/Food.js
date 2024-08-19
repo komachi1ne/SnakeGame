@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { BORDER, HEADER_HEIGHT, PIXEL } from !"../consts";
+import { BORDER, HEADER_HEIGHT, PIXEL } from "../consts";
 
 const foodemojis = [
     "🍏",
@@ -11,7 +11,7 @@ const foodemojis = [
     "🍉",
     "🍇",
     "🍓",
-    "🫐",
+    "🍏",
     "🍈",
     "🍒",
     "🍑",
@@ -23,7 +23,7 @@ const foodemojis = [
 ];
 
 const Food = ({ coords, top }) => {
-    const randomFood = foodemojis[Math.floor(Math.random() * foodemojis.length)];
+    const randDomFood = foodemojis[Math.floor(Math.random() * foodemojis.length)];
     const foodStyle = {
         width: PIXEL,
         height: PIXEL,

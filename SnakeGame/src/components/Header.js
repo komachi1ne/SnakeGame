@@ -20,12 +20,12 @@ const Header = ({top, score, paused, pause, reload}) => {
             </TouchableOpacity>
             <TouchableOpacity onPress={pause}>
                 <Ionicons 
-                name={pause ? "play" : "pause"}
+                name={paused ? "play" : "pause"}
                 size={26}
                 color={colors.p6}
                 />
             </TouchableOpacity>
-            <Text style={styles.score}></Text>
+            <Text style={styles.score}>{score}</Text>
         </View>
     )
 }
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     score: {
-        color: Colors.p6,
+        color: colors.p6,
         fontSize: 20,
         fontWeight: "bold",
     },

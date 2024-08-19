@@ -1,3 +1,0 @@
-cd SnakeGame
-git config --global user.name komachi1ne
-git config --global user.email isabellevasconcelos862@gmail.com
